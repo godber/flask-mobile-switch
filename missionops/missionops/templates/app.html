@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+        <title>
+        </title>
+        <link rel="stylesheet" href="https://s3.amazonaws.com/codiqa-cdn/mobile/1.2.0/jquery.mobile-1.2.0.min.css" />
+        <script src="https://s3.amazonaws.com/codiqa-cdn/jquery-1.7.2.min.js">
+        </script>
+        <script src="https://s3.amazonaws.com/codiqa-cdn/mobile/1.2.0/jquery.mobile-1.2.0.min.js">
+        </script>
+    </head>
+    <body>
+        <!-- Home -->
+        <div data-role="page" id="page1">
+            <div data-theme="a" data-role="header">
+                 <h5>
+                    {{ title }}
+                </h5>
+                <a href="{{ url_for('config') }}" data-icon="gear" class="ui-btn-right">Config</a>
+	       <span class="ui-title" />
+               
+            </div>
+            <div data-role="content" style="text-align: center">
+                <div style="width: 288px; height: '{{y_size}}'px; background-color: #fbfbfb; border: 1px solid #b8b8b8;">
+                    <img src="{{ image_url }}"  alt="image" style=" text-align: center; width:288px; height:'{{ysize}}'px" />
+                </div>
+                <div data-role="fieldcontain">
+                    <fieldset data-role="controlgroup">
+                        <label for="toggleswitch1">
+                            LCD Switch
+                        </label>
+                        <select name="toggleswitch1" id="toggleswitch1" data-theme="" data-role="slider" data-mini="true" >
+                            {% if switch %}
+                            <option value="off">
+                                Off
+                            </option>
+                            <option value="on" selected>
+                                On
+                            </option>
+                            {% else %}
+                            <option value="off">
+                                Off
+                            </option>
+                            <option value="on">
+                                On
+                            </option>
+                            {% endif %}
+                        </select>
+                    </fieldset>
+                </div>
+            </div>
+        </div>
+    </body>
+
+</html>
+<script>
+$( "#toggleswitch1" ).on( 'slidestop', function( event )
+    {
+    var value = this.value
+    if(value == "on")
+    state = true
+    else
+    state = false
+    $.ajax({
+    url:'http://rohandev.sese.asu.edu:5000/api/switch/1', 
+    type:"PUT",
+    contentType:"binary/octet-stream",
+    host:"localhost",
+    data:JSON.stringify({"switch_state": state})
+    });
+});
+</script>
